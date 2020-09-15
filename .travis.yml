@@ -6,12 +6,12 @@ python:
 # services for travis to use
 services:
   - docker
+# script for travis to run before scripts are ran
+before_script: pip install docker-compose
 # jobs for travis to run
 jobs:
-    include:
-        - stage: test
-            before_script: pip install docker-compose
-            script: docker-compose run app sh -c "python manage.py test"
-        - stage: lint
-            before_script: pip install docker-compose
-            script: docker-compose run app sh -c "flake8"
+  include:
+    - stage: test
+      script: docker-compose run app sh -c "python manage.py test"
+    - stage: lint
+      script: docker-compose run app sh -c "flake8"
