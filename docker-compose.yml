@@ -1,5 +1,5 @@
 # version of docker compose to use
-version: "3"
+version: "3.8"
 
 services:
   # name of our service
@@ -16,8 +16,10 @@ services:
     volumes:
       # map ./app on host to /app in container
       - ./app:/app
+      # map ./wait-for-it.sh
+      - ./wait-for-it.sh:/wait-for-it.sh
     command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      ./wait-for-it.sh db:5432 -- sh -c "python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=app
@@ -28,8 +30,12 @@ services:
   db:
     # use postgres 10 alpine as base image
     image: postgres:10-alpine
+    # host
+    hostname: db
     # environment variables
     environment:
       - POSTGRES_DB=app
       - POSTGRES_USER=postgres
-      - POSTGRESS_PASSWORD=supersecretpassword
+      - POSTGRES_PASSWORD=supersecretpassword
+    ports:
+      - "5432:5432"
