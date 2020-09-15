@@ -1,0 +1,20 @@
+# version of docker compose to use
+version: "3"
+
+services:
+  # name of our service
+  app:
+    # build section of our service
+    build:
+      # set context (directory to run docker compose in, relative to host)
+      context: .
+    # port config
+    ports:
+      # port forwarding HOST:CONTAINER
+      - "8000:8000"
+    # volume config
+    volumes:
+      # map ./app on host to /app in container
+      - ./app:/app
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
