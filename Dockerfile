@@ -6,8 +6,14 @@ LABEL maintainer="j@jdleo.me"
 ENV PYTHONUNBUFFERED 1
 # copy python dependencies from host into container
 COPY ./requirements.txt ./requirements.txt
+# add postgres client to apk
+RUN apk add --update --no-cache postgresql-client
+# add temporary dependencies for building postgresql
+RUN apk add --update --no-cache --virtual .tmp-build-deps gcc libc-dev linux-headers postgresql-dev
 # install dependencies in container
 RUN pip install -r /requirements.txt
+# delete temp requirements
+RUN apk del .tmp-build-deps
 # make /app for python app, set working directory to /app
 RUN mkdir /app
 WORKDIR /app
