@@ -1,0 +1,17 @@
+# language this project is using
+language: python
+# version of the language
+python:
+  - "3.6"
+# services for travis to use
+services:
+  - docker
+# jobs for travis to run
+jobs:
+    include:
+        - stage: test
+            before_script: pip install docker-compose
+            script: docker-compose run app sh -c "python manage.py test"
+        - stage: lint
+            before_script: pip install docker-compose
+            script: docker-compose run app sh -c "flake8"
